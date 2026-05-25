@@ -112,11 +112,9 @@ get_public_ip() {
     # 优先尝试获取 IPv4
     for service in "${ipv4_services[@]}"; do
         if ip=$(safe_curl "$service" | tr -d '[:space:]'); then
-            if [[ "$ip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
                 echo "$ip"
                 success "成功获取公网 IPv4 地址。"
                 return 0
-            fi
         fi
     done
     
