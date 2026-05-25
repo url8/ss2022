@@ -572,7 +572,6 @@ do_modify_config() {
 }
 
 view_config() {
-view_config() {
     if [[ ! -f "$CONFIG_PATH" ]]; then
         error "找不到配置文件，请先执行安装。"
     fi
