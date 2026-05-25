@@ -106,8 +106,8 @@ validate_password() {
 get_public_ip() {
     info "正在查询公网IP地址..."
     local ip=""
-    local ipv4_services=("https://ipv4.ip.sb")
-    local ipv6_services=("https://ipv6.ip.sb")
+    local ipv4_services=("http://ipv4.ip.sb")
+    local ipv6_services=("http://ipv6.ip.sb")
     
     # 优先尝试获取 IPv4
     for service in "${ipv4_services[@]}"; do
