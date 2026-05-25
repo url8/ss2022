@@ -201,7 +201,7 @@ get_latest_version() {
     info "正在获取 shadowsocks-rust 的最新版本号..."
     local latest_version
     
-    latest_version=$(safe_curl "https://ghproxy.vip/https://api.github.com/repos/shadowsocks/shadowsocks-rust/releases/latest" | jq -r '.tag_name // empty')
+    latest_version=$(safe_curl "https://api.github.com/repos/shadowsocks/shadowsocks-rust/releases/latest" | jq -r '.tag_name // empty')
     
     if [[ -z "$latest_version" ]]; then
         error "获取最新版本失败，请检查网络连接或稍后重试。"
