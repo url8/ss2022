@@ -104,37 +104,14 @@ validate_password() {
 }
 
 get_public_ip() {
-    info "正在查询公网IP地址..."
-    local ip=""
-    local ipv4_services=("https://ipv4.ip.sb")
-    local ipv6_services=("https://ipv6.ip.sb")
-    
-    # 优先尝试获取 IPv4
-    for service in "${ipv4_services[@]}"; do
-        if ip=$(safe_curl "$service" | tr -d '[:space:]'); then
-            if [[ "$ip" =~ ^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$ ]]; then
-                echo "$ip"
-                success "成功获取公网 IPv4 地址。"
-                return 0
-            fi
-        fi
-    done
-    
-    warn "未能获取公网 IPv4 地址，正在尝试获取 IPv6..."
-    
-    # 尝试获取 IPv6
-    for service in "${ipv6_services[@]}"; do
-        if ip=$(safe_curl "$service" | tr -d '[:space:]'); then
-            if [[ "$ip" =~ ^[0-9a-fA-F:]+$ ]]; then
-                echo "[$ip]"
-                success "成功获取公网 IPv6 地址。"
-                return 0
-            fi
-        fi
-    done
-    
-    warn "无法获取公网IP地址，请检查网络连接。"
-    return 1
+    info "正在使用固定公网IP地址..."
+    # 在这里直接写死你的公网IP（IPv4 或 IPv6 都可以）
+    local ip="123.123.123.123"
+
+    # 直接返回固定IP，不走任何网络请求
+    echo "$ip"
+    success "成功使用写死的固定公网IP占位"
+    return 0
 }
 
 detect_os() {
@@ -576,12 +553,10 @@ view_config() {
         error "找不到配置文件，请先执行安装。"
     fi
 
-    # 直接写死你的公网IP，把这里改成你自己的真实公网IP
-    local ip_address="123.123.123.123"
-
-    # 不再调用 get_public_ip，直接使用写死的IP
-    if [[ -z "$ip_address" ]]; then
-        warn "公网IP地址未配置，订阅链接将无法生成。"
+    local ip_address
+    if ! ip_address=$(get_public_ip); then
+        warn "无法获取公网IP地址，订阅链接将无法生成。"
+        # *** 修正点 2: 移除了 ' __ ' 拼写错误 ***
         info "您可以手动查看配置文件: $CONFIG_PATH"
         return
     fi
@@ -593,7 +568,8 @@ view_config() {
     
     if [[ -z "$port" || -z "$password" || -z "$method" ]]; then
         error "配置文件格式错误，无法读取必要信息。"
-    fi 
+    fi
+    
     node_name="$(hostname)-ss2022"
 
     local encoded_credentials
